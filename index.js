@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const searchTypes = require('./search-type');
 app.use(express.json());
 
 const mongoose = require('mongoose');
@@ -23,8 +24,76 @@ const Event = mongoose.model('Event', eventSchema);
 
 
 
-app.get('/api/event/', (req, res) => {
-    res.send('getEvent');
+app.get('/api/event/', async (req, res) => {
+    // res.send('getEvent');
+    result = await getEvent();
+    res.send(result);
+
+    async function getEvent(){
+        
+        var sType = req.body.searchType;
+
+        // if (sType === searchTypes.ALL){
+        //     const event = await Event         
+        //     .find();
+        //     console.log(event);
+        // }
+        
+        // if (sType === searchTypes.TITLE){
+        //     const event = await Event
+        //     .find({title: req.body.title});
+        //     console.log(event)
+        // }        
+
+        switch (sType){
+            case searchTypes.ALL:
+                return event = await Event.find();
+            break;
+
+            case searchTypes.TITLE:
+                return event = await Event.find({ title: req.body.title});
+            break;
+
+            case searchTypes._ID:
+                return event = await Event.find({_id: req.body._id});
+            break;
+
+            case searchTypes.COLOR:
+                return event = await Event.find({color: req.body.color});
+            break;
+
+            case searchTypes.ASSIGNEDTOBYNAME:
+                return event = await Event.find({'assignedTo.firstName': req.body.assignedTo.firstName});
+            break;
+
+            case searchTypes.ASSIGNEDTOBYLASTNAME:
+                return event = await Event.find({'assignedTo.lastName': req.body.assignedTo.lastName});
+            break;
+
+            case searchTypes.ASSIGNEDTOBYEMAIL:
+                return event = await Event.find({'assignedTo.email': req.body.assignedTo.email});
+            break;
+
+            case searchTypes.CREATEDBYNAME:
+                return event = await Event.find({'createdBy.firstName': req.body.createdBy.firstName});
+            break;
+
+            case searchTypes.CREATEDBYLASTNAME:
+                return event = await Event.find({'createdBy.lastName': req.body.createdBy.lastName});
+            break;
+
+            case searchTypes.CREATEDBYEMAIL:
+                return event = await Event.find({'createdBy.email': req.body.createdBy.email});
+            break;
+
+
+            default:
+                console.log("incorrect GET parameter")
+        }
+
+        //console.log(event);
+
+    }
 });
 
 app.post('/api/event/', (req, res) => {
@@ -73,3 +142,4 @@ app.delete('/api/event/', (req, res) => {
 app.listen(3000, () => {
     console.log('listening on port 3000')
 })
+
