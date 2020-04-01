@@ -16,6 +16,14 @@ router.get('/api/events/month/', async (req, res) => {
     res.send(await CalendarEvent.find({ start: { $gte: startSearchDate, $lt: endSearchDate}}));
 });
 
+router.get('/api/events/range/', async (req, res) => {
+    const { start, end } = req.query;
+    if (!start) return res.status(400).send('start is required');
+    if (!end) return res.status(400).send('end is required');
+
+    res.send(await CalendarEvent.find({ start: { $gte: start, $lte: end}}));
+});
+
 router.get('/api/events/:id', async (req, res) => {
     const id = req.params.id;
 
