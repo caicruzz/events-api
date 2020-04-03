@@ -6,11 +6,12 @@ const CalendarEvent = require('../models/calendar-event');
 
 router.get('/api/events/month/', async (req, res) => {
     const { month, year } = req.query;
+
     if (!month) return res.status(400).send('month is required');
     if (!year) return res.status(400).send('year is required');
 
     // JS months are 0 indexed
-    const startSearchDate = new Date(`${year}-${parseInt(month) + 1}-01`);
+    const startSearchDate = new Date(`${year}-${month}-01`);
     const endSearchDate = new Date(`${year}-${startSearchDate.getMonth() + 2}-01`);
 
     res.send(await CalendarEvent.find({ start: { $gte: startSearchDate, $lt: endSearchDate}}));
@@ -62,7 +63,7 @@ router.put('/api/events/', (req, res) => {
     res.send('putEvent');
 });
 
-router.delete('/api/events/', (req, res) => {
+router.delete('/api/events/:id', (req, res) => {
     res.send('delEvent');
 });
 
