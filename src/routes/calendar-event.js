@@ -67,7 +67,7 @@ router.patch('/api/events/:id', async (req, res) => {
     try {
         foundEvent = await CalendarEvent.findByIdAndUpdate(eventId, req.body, { new: true });
     } catch (e) {
-        res.send(e.message);
+        return res.send(e.message);
     }
 
     if (!foundEvent) return res.sendStatus(404);
@@ -75,8 +75,19 @@ router.patch('/api/events/:id', async (req, res) => {
     res.send(foundEvent);
 });
 
-router.delete('/api/events/:id', (req, res) => {
-    res.send('delEvent');
+router.delete('/api/events/:id', async (req, res) => {
+    const eventId = ObjectId(req.params.id);
+    let foundEvent;
+
+    try {
+        foundEvent = await CalendarEvent.findByIdAndDelete(eventId)
+    } catch (e) {
+        return res.send(e.message);
+    }
+
+    if (!foundEvent) return res.sendStatus(404);
+
+    res.sendStatus(200);
 });
 
 module.exports = router;
