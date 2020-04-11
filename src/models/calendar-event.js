@@ -6,7 +6,7 @@ const calendarEventSchema = mongoose.Schema({
     start: { type: Date, required: [true, 'start is required']},
     end: { type: Date, required: [true, 'end is required']},
     color: { type: String, required: [true, 'color is required']},
-    assignedTo: { id: Number, firstName: String, lastName: String, phone: String, email: String },
+    assignedTo: { type: String, required: [true, 'assignedTo is required'] },
     createdBy: { id: Number, firstName: String, lastName: String, phone: String, email: String },
 });
 

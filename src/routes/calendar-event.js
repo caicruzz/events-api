@@ -1,5 +1,6 @@
 const express = require('express');
 const router = new express.Router();
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const CalendarEvent = require('../models/calendar-event');
 
@@ -42,14 +43,14 @@ router.get('/api/events/:id', async (req, res) => {
 });
 
 router.post('/api/events/', async (req, res) => {
-    const { title, start, end, color } = req.body;
+    const { title, start, end, color, assignedTo } = req.body;
 
     const calendarEvent = new CalendarEvent({
         title,
         start,
         end,
-        color
-        // TODO assignedTo && createdBy properties
+        color,
+        assignedTo
     });
 
     try {
@@ -59,8 +60,19 @@ router.post('/api/events/', async (req, res) => {
     }
 });
 
-router.put('/api/events/', (req, res) => {
-    res.send('putEvent');
+router.patch('/api/events/:id', async (req, res) => {
+    const eventId = ObjectId(req.params.id);
+    let foundEvent;
+
+    try {
+        foundEvent = await CalendarEvent.findByIdAndUpdate(eventId, req.body, { new: true });
+    } catch (e) {
+        res.send(e.message);
+    }
+
+    if (!foundEvent) return res.sendStatus(404);
+
+    res.send(foundEvent);
 });
 
 router.delete('/api/events/:id', (req, res) => {
