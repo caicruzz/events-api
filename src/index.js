@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const PORT = 3001;
 
 const calendarEventRouter = require('./routes/calendar-event');
 const cors = require('cors');
@@ -11,7 +10,7 @@ app.use(express.json());
 app.use(cors(corsOptions));
 app.use(calendarEventRouter);
 
-app.listen(PORT, () => {
-    console.log(`listening on port ${PORT}`)
+app.listen(3001, () => {
+    console.log('listening on port 3000')
 });
 
